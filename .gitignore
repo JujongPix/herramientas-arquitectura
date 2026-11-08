@@ -1,0 +1,4 @@
+*.dxf
+*.DXF
+*.csv
+__pycache__/
