@@ -121,5 +121,8 @@ with open(SALIDA, "w", newline="", encoding="utf-8-sig") as archivo:
     for nombre, area in espacios:
         escritor.writerow([nombre, round(area, 2), round(area / total * 100, 1), round(area * precio_m2, 2)])
     escritor.writerow(["TOTAL", round(total, 2), 100, round(total * precio_m2, 2)])
-
+    if area_contorno is not None:
+        escritor.writerow([])
+        escritor.writerow(["Contorno exterior", round(area_contorno, 2)])
+        escritor.writerow(["Diferencia (muros y huecos)", round(area_contorno - total, 2), round((area_contorno - total) / area_contorno * 100, 1)])
 print(f"Guardado en {SALIDA}")
