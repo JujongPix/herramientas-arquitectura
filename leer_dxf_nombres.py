@@ -1,7 +1,17 @@
 import csv
 import ezdxf
+import os
+import sys
 
-ARCHIVO = "plano_ejecutivo.dxf"
+if len(sys.argv) > 1:
+    ARCHIVO = sys.argv[1]
+else:
+    ARCHIVO = input("Archivo DXF (Enter para usar plano_ejecutivo.dxf): ").strip().strip('"')
+    if ARCHIVO == "":
+        ARCHIVO = "plano_ejecutivo.dxf"
+if not ARCHIVO.lower().endswith(".dxf"):
+    ARCHIVO += ".dxf"
+SALIDA = os.path.splitext(ARCHIVO)[0] + "_areas.csv"
 CAPA = "ESPACIOS"
 precio_m2 = 8000
 CAPA_CONTORNO = "CONTORNOS"
@@ -29,7 +39,9 @@ def area_poligono(puntos):
         suma += x1 * y2 - x2 * y1
     return abs(suma) / 2
 
-
+if not os.path.exists(ARCHIVO):
+    print(f"No encontré el archivo '{ARCHIVO}' en esta carpeta.")
+    exit()
 doc = ezdxf.readfile(ARCHIVO)
 msp = doc.modelspace()
 # Detectamos las unidades con las que está guardado el plano
@@ -103,11 +115,11 @@ if area_contorno is not None:
 else:
     print(f"\nNo encontré una polilínea cerrada en la capa {CAPA_CONTORNO}.")
 # 4. Guardamos en CSV
-with open("areas_dxf.csv", "w", newline="", encoding="utf-8-sig") as archivo:
+with open(SALIDA, "w", newline="", encoding="utf-8-sig") as archivo:
     escritor = csv.writer(archivo)
     escritor.writerow(["Espacio", "Area m2", "Porcentaje", "Costo"])
     for nombre, area in espacios:
         escritor.writerow([nombre, round(area, 2), round(area / total * 100, 1), round(area * precio_m2, 2)])
     escritor.writerow(["TOTAL", round(total, 2), 100, round(total * precio_m2, 2)])
 
-print("Guardado en areas_dxf.csv")
+print(f"Guardado en {SALIDA}")
