@@ -26,8 +26,10 @@ errores.
 5. Guarda como **AutoCAD DXF** en la misma carpeta que el script.
 
 ## Uso
+```
 py -m pip install ezdxf
 py leer_dxf_nombres.py mi_plano.dxf
+```
 
 Si no indicas el archivo, el programa lo pregunta. El resultado se guarda
 junto al plano, como `mi_plano_areas.csv`.
